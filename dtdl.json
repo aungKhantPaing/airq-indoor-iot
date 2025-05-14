@@ -1,0 +1,129 @@
+{
+    "@id": "dtmi:training101:airthings_4gt;1",
+    "@type": "Interface",
+    "contents": [
+        {
+            "@id": "dtmi:training101:airthings_4gt:radon;1",
+            "@type": [
+                "Telemetry",
+                "NumberValue"
+            ],
+            "comment": "picoCuriePerLiter",
+            "displayName": {
+                "en": "Radon"
+            },
+            "name": "radon",
+            "schema": "double",
+            "displayUnit": {
+                "en": "pCi/L"
+            }
+        },
+        {
+            "@id": "dtmi:training101:airthings_4gt:pm2p5;1",
+            "@type": [
+                "Telemetry",
+                "NumberValue"
+            ],
+            "comment": "microgramPerCubicMeter",
+            "displayName": {
+                "en": "PM2.5"
+            },
+            "name": "pm2p5",
+            "schema": "double",
+            "unit": "microgram",
+            "displayUnit": {
+                "en": "µg/m³"
+            }
+        },
+        {
+            "@id": "dtmi:training101:airthings_4gt:voc;1",
+            "@type": [
+                "Telemetry",
+                "NumberValue"
+            ],
+            "comment": "partsPerBillion",
+            "displayName": {
+                "en": "VOC Level"
+            },
+            "name": "voc",
+            "schema": "double",
+            "displayUnit": {
+                "en": "ppb"
+            }
+        },
+        {
+            "@id": "dtmi:training101:airthings_4gt:co2;1",
+            "@type": [
+                "Telemetry",
+                "NumberValue"
+            ],
+            "comment": "partsPerMillion",
+            "displayName": {
+                "en": "CO2 Level"
+            },
+            "name": "co2",
+            "schema": "double",
+            "displayUnit": {
+                "en": "ppm"
+            }
+        },
+        {
+            "@id": "dtmi:training101:airthings_4gt:humidity;1",
+            "@type": [
+                "Telemetry",
+                "Humidity",
+                "NumberValue"
+            ],
+            "displayName": {
+                "en": "Humidity"
+            },
+            "name": "humidity",
+            "schema": "double",
+            "unit": "percent",
+            "displayUnit": {
+                "en": "%"
+            }
+        },
+        {
+            "@id": "dtmi:training101:airthings_4gt:temperature;1",
+            "@type": [
+                "Telemetry",
+                "Temperature",
+                "NumberValue"
+            ],
+            "displayName": {
+                "en": "Temperature"
+            },
+            "name": "temperature",
+            "schema": "double",
+            "unit": "degreeCelsius",
+            "displayUnit": {
+                "en": "C"
+            }
+        },
+        {
+            "@id": "dtmi:training101:airthings_4gt:pressure;1",
+            "@type": [
+                "Telemetry",
+                "Pressure",
+                "NumberValue"
+            ],
+            "comment": "hectopascal",
+            "displayName": {
+                "en": "Pressure"
+            },
+            "name": "pressure",
+            "schema": "double",
+            "displayUnit": {
+                "en": "hPa"
+            }
+        }
+    ],
+    "displayName": {
+        "en": "airthings"
+    },
+    "@context": [
+        "dtmi:iotcentral:context;2",
+        "dtmi:dtdl:context;2"
+    ]
+}
