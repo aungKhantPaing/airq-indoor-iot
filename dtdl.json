@@ -57,7 +57,7 @@
     },
     {
       "@id": "dtmi:training101:airthings_4gt:humidity;1",
-      "@type": ["Telemetry", "Humidity", "NumberValue"],
+      "@type": ["Telemetry", "NumberValue", "Humidity"],
       "displayName": {
         "en": "Humidity"
       },
@@ -70,7 +70,7 @@
     },
     {
       "@id": "dtmi:training101:airthings_4gt:temperature;1",
-      "@type": ["Telemetry", "Temperature", "NumberValue"],
+      "@type": ["Telemetry", "NumberValue", "Temperature"],
       "displayName": {
         "en": "Temperature"
       },
@@ -83,7 +83,7 @@
     },
     {
       "@id": "dtmi:training101:airthings_4gt:pressure;1",
-      "@type": ["Telemetry", "Pressure", "NumberValue"],
+      "@type": ["Telemetry", "NumberValue", "Pressure"],
       "comment": "hectopascal",
       "displayName": {
         "en": "Pressure"
@@ -93,6 +93,16 @@
       "displayUnit": {
         "en": "hPa"
       }
+    },
+    {
+      "@id": "dtmi:training101:airthings_4gt:Location;1",
+      "@type": ["Property", "Location"],
+      "displayName": {
+        "en": "Location"
+      },
+      "name": "Location",
+      "schema": "geopoint",
+      "writable": false
     }
   ],
   "displayName": {

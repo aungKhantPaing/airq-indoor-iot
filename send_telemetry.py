@@ -3,10 +3,7 @@ import json
 import time
 import random
 import os
-
-# import base64
-# import hmac
-# import hashlib
+import asyncio
 
 load_dotenv()
 
@@ -15,29 +12,22 @@ from azure.iot.device import Message, exceptions
 from azure.iot.device.aio import (
     IoTHubDeviceClient,
     ProvisioningDeviceClient,
-)  # Correct import for ProvisioningDeviceClient
+)
 
 # --- Configuration for DPS ---
 PROVISIONING_HOST = os.getenv(
     "IOTHUB_DEVICE_DPS_ENDPOINT", "global.azure-devices-provisioning.net"
 )
 ID_SCOPE = os.getenv("IOTHUB_DEVICE_DPS_ID_SCOPE")
-REGISTRATION_ID = os.getenv("IOTHUB_DEVICE_DPS_DEVICE_ID")  # This is your Device ID
-SYMMETRIC_KEY = os.getenv(
-    "IOTHUB_DEVICE_DPS_DEVICE_KEY"
-)  # Primary Key of the group or device
+REGISTRATION_ID = os.getenv("IOTHUB_DEVICE_DPS_DEVICE_ID")
+SYMMETRIC_KEY = os.getenv("IOTHUB_DEVICE_DPS_DEVICE_KEY")
 
-# Telemetry sending interval in seconds
-MESSAGE_INTERVAL = 10  # Send data every 10 seconds
+# Send data every x seconds
+MESSAGE_INTERVAL = 10
+MODEL_ID = "dtmi:training101:airthings_4gt;1"
 
 
 def create_telemetry_data():
-    """
-    Creates a telemetry data payload based on the DTDL model (dtdl.json).
-    This function generates random data for demonstration purposes.
-    """
-    # Based on the DTDL file (dtdl.json)
-    # "name" fields are: "radon", "pm2p5", "voc", "co2", "humidity", "temperature", "pressure"
     data = {
         "radon": round(random.uniform(0.1, 4.0), 2),  # Example range for pCi/L
         "pm2p5": round(random.uniform(5.0, 50.0), 2),  # Example range for µg/m³
@@ -60,9 +50,7 @@ async def provision_device():
             symmetric_key=SYMMETRIC_KEY,
         )
 
-        provisioning_device_client.provisioning_payload = {
-            "modelId": "dtmi:training101:airthings_4gt;1"
-        }
+        provisioning_device_client.provisioning_payload = {"modelId": MODEL_ID}
 
         print(
             f"Provisioning device '{REGISTRATION_ID}' with DPS host '{PROVISIONING_HOST}' and ID scope '{ID_SCOPE}'..."
@@ -80,7 +68,7 @@ async def provision_device():
             )
             print(f"Device ID: {registration_result.registration_state.device_id}")
             device_client = IoTHubDeviceClient.create_from_symmetric_key(
-                symmetric_key=SYMMETRIC_KEY,  # DPS uses the same symmetric key for the device client after provisioning
+                symmetric_key=SYMMETRIC_KEY,
                 hostname=registration_result.registration_state.assigned_hub,
                 device_id=registration_result.registration_state.device_id,
             )
@@ -96,7 +84,7 @@ async def provision_device():
 
 
 async def main():
-    print("IoT Central Telemetry Sender for Airthings Device (using DPS)")
+    print("IoT Central Telemetry Sender for AirHub Device (using DPS)")
     print("Press Ctrl-C to exit")
 
     if not all([ID_SCOPE, REGISTRATION_ID, SYMMETRIC_KEY]):
@@ -110,15 +98,10 @@ async def main():
         print("Please set these environment variables.")
         return
 
-    # device_client = None
     try:
-        # Provision the device and get an IoTHubDeviceClient
         device_client = await provision_device()
 
         print("Device client created via DPS. Connecting to IoT Hub...")
-        # if (device_client):
-        #     print('Device client exit', device_client)
-        #     print(type(device_client))
         await device_client.connect()
         print("Device connected to IoT Hub.")
 
@@ -132,7 +115,6 @@ async def main():
             print(f"Sending message: {msg_txt_formatted}")
             try:
                 await device_client.send_message(message)
-                # print("Message successfully sent")
             except exceptions.ConnectionDroppedError:
                 print("Connection dropped. Attempting to reconnect...")
                 try:
@@ -147,9 +129,7 @@ async def main():
             except Exception as e:
                 print(f"Error sending message: {e}")
 
-            await asyncio.sleep(
-                MESSAGE_INTERVAL
-            )  # Use asyncio.sleep for async functions
+            await asyncio.sleep(MESSAGE_INTERVAL)
 
     except KeyboardInterrupt:
         print("Telemetry sender stopped by user.")
@@ -158,9 +138,9 @@ async def main():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
     finally:
-        if device_client:  # First check if device_client exists
+        if device_client:
             try:
-                if device_client.connected:  # Then check if it's connected
+                if device_client.connected:
                     print("Shutting down device client...")
                     await device_client.shutdown()
                     print("Device client shut down.")
@@ -169,17 +149,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    # Import asyncio if it's not already imported at the top level
-    import asyncio
-
-    try:
-        asyncio.run(main())
-    except (
-        RuntimeError
-    ) as e:  # Catch asyncio specific runtime errors like event loop already running
-        if "Cannot run the event loop while another loop is running" in str(e):
-            print(
-                "Asyncio event loop is already running. Please ensure this script is run in an environment where a new loop can be started."
-            )
-        else:
-            raise
+    asyncio.run(main())
