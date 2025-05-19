@@ -5,14 +5,13 @@ import random
 import os
 import asyncio
 
-load_dotenv()
-
-# Import the Azure IoT Central device SDK
 from azure.iot.device import Message, exceptions
 from azure.iot.device.aio import (
     IoTHubDeviceClient,
     ProvisioningDeviceClient,
 )
+
+load_dotenv()
 
 # --- Configuration for DPS ---
 PROVISIONING_HOST = os.getenv(
